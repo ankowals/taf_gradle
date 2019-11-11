@@ -1,0 +1,1 @@
+INSERT INTO DOG (id, name, breed) VALUES (4, 'Aria', 'Mutt');
