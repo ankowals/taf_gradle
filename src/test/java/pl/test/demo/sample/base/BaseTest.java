@@ -60,7 +60,8 @@ public class BaseTest {
                 put("javax.persistence.jdbc.password", envConfig.getPass());
             }};
         } catch (Exception ex) {
-            PostgreSQLContainer dbContainer = new PostgreSQLContainer();
+            PostgreSQLContainer dbContainer = new PostgreSQLContainer().withDatabaseName("DOGSDB")
+                    .withPassword("dog").withUsername("dog");
             dbContainer.start();
 
             awaitForContainer(dbContainer);
