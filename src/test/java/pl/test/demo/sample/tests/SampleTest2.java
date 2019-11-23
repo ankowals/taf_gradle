@@ -20,9 +20,6 @@ import static org.assertj.core.api.Assertions.extractProperty;
 public class SampleTest2 extends BaseTest {
 
     @Rule
-    public EntityManagerProvider emProvider = EntityManagerProvider.instance(PersitanceUnits.DOGS_DB.toString(), dbConnectionProperties);
-
-    @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection());
 
     @Test

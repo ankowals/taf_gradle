@@ -2,7 +2,10 @@ package pl.test.demo.sample.base;
 
 import io.qameta.allure.Attachment;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.ThreadContext;
+import org.apache.logging.log4j.io.IoBuilder;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
@@ -15,6 +18,15 @@ import java.nio.file.Paths;
 
 @Log4j2
 public class MyTestWatcher extends TestWatcher {
+
+    static {
+        System.setOut(IoBuilder.forLogger(LogManager.getLogger())
+                .setLevel(Level.DEBUG).buildPrintStream()
+        );
+        System.setErr(IoBuilder.forLogger(LogManager.getLogger())
+                .setLevel(Level.WARN).buildPrintStream()
+        );
+    }
 
     @Override
     protected void starting(Description description) {
