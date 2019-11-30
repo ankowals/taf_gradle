@@ -18,6 +18,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SampleTest extends BaseTest {
 
     @Rule
+    public EntityManagerProvider emProvider = EntityManagerProvider.instance(PersitanceUnits.DOGS_DB.getValue(),
+            getConnectionProperties());
+
+    @Rule
     public DBUnitRule dbUnitRule = DBUnitRule.instance(emProvider.connection());
 
     @Test

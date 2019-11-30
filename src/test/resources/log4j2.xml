@@ -3,7 +3,7 @@
     <Appenders>
         <CountingNoOp name="DEV_NULL"/>
         <Console name="ConsoleAppender" target="SYSTEM_OUT">
-            <ThresholdFilter level="TRACE" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
         <RollingFile name="RollingFileAppender" fileName="build/logs/all.log"
@@ -25,7 +25,7 @@
         </Routing>
     </Appenders>
     <Loggers>
-        <Root level="DEBUG">
+        <Root level="INFO">
             <AppenderRef ref="DEV_NULL"/>
             <AppenderRef ref="RoutingAppender"/>
             <AppenderRef ref="ConsoleAppender"/>
