@@ -1,11 +1,13 @@
 package pl.test.demo.sample.base;
 
+import com.github.database.rider.core.api.connection.ConnectionHolder;
+import com.github.database.rider.core.dataset.DataSetExecutorImpl;
+import com.github.database.rider.junit5.DBUnitExtension;
 import lombok.extern.log4j.Log4j2;
 import org.aeonbits.owner.ConfigCache;
 import org.awaitility.Duration;
 import org.flywaydb.core.Flyway;
-import org.junit.Rule;
-import org.junit.rules.TestWatcher;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.testcontainers.containers.PostgreSQLContainer;
 import pl.test.demo.sample.config.EnvironmentConfig;
 
@@ -14,10 +16,13 @@ import java.net.Socket;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static com.github.database.rider.core.util.EntityManagerProvider.instance;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.*;
 
 @Log4j2
+@ExtendWith(TestLoggerExtension.class)
+@ExtendWith(DBUnitExtension.class)
 public class BaseTest {
 
     private static Map<String, String> connectionProperties = new HashMap<>();
@@ -36,9 +41,10 @@ public class BaseTest {
     protected Map<String, String> getConnectionProperties() {
         return connectionProperties;
     }
-
-    @Rule
-    public TestWatcher watchman = new MyTestWatcher();
+    protected ConnectionHolder getConnection(){
+        return () -> instance(PersitanceUnits.DOGS_DB.getValue(), getConnectionProperties()).connection();
+    }
+    protected DataSetExecutorImpl executor() { return DataSetExecutorImpl.instance(getConnection()); }
 
     private static void migrateDb(String url, String user, String password) {
         Flyway.configure().locations("filesystem:" + Paths.get("src", "test", "resources", "db", "migration")
@@ -59,9 +65,8 @@ public class BaseTest {
 
         } catch (Exception ex) {
             PostgreSQLContainer dbContainer = new PostgreSQLContainer().withDatabaseName("DOGSDB")
-                    .withPassword(envConfig.getUser()).withUsername(envConfig.getPass());
+                    .withUsername(envConfig.getUser()).withPassword(envConfig.getPass());
             dbContainer.start();
-
             awaitForContainer(dbContainer);
 
             return dbContainer.getJdbcUrl();
