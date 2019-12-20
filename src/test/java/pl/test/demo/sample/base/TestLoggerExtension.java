@@ -44,7 +44,7 @@ public class TestLoggerExtension implements BeforeAllCallback, TestExecutionExce
     }
 
     @Override
-    public void afterTestExecution(ExtensionContext context) {
+    public void afterTestExecution(ExtensionContext context) throws Exception {
         log.info("--- TEST " + context.getRequiredTestMethod().getName() + " ENDED ---");
         attachLogToReport();
     }
@@ -87,17 +87,12 @@ public class TestLoggerExtension implements BeforeAllCallback, TestExecutionExce
     }
 
     @Attachment(value = "log", type = "text/plain")
-    private byte[] attachLogToReport(){
+    private byte[] attachLogToReport() throws IOException {
         String fileName = ThreadContext.get("logFileName");
         String dir = ThreadContext.get("logDirName");
         File file = new File(System.getProperty("user.dir") + "/build/logs/" + dir + "/" + fileName + ".log");
-        try {
-            return Files.readAllBytes(Paths.get(file.getAbsolutePath()));
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
 
-        return null;
+        return Files.readAllBytes(Paths.get(file.getAbsolutePath()));
     }
 
 }
