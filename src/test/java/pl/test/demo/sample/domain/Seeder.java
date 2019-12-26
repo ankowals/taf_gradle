@@ -11,6 +11,7 @@ import static java.util.stream.Collectors.toList;
 @Log4j2
 @Getter
 @NoArgsConstructor
+@SuppressWarnings("unchecked")
 public class Seeder {
 
     private Map<Class<?>, List<Object>> map = new LinkedHashMap<>();
@@ -28,6 +29,26 @@ public class Seeder {
         if (klazz.isInstance(value)) {
             map.get(klazz).add(value);
         }
+        return this;
+    }
+
+    public <T> Seeder clearRow(T value) {
+        map.get(klazz).remove(value);
+        return this;
+    }
+
+    public <T> Seeder clearRowAtIndex(int index) {
+        map.get(klazz).remove(index);
+        return this;
+    }
+
+    public <T> Seeder clearAllRows() {
+        map.get(klazz).clear();
+        return this;
+    }
+
+    public <T> Seeder clearRows(Collection<?> value) {
+        map.get(klazz).removeAll(value);
         return this;
     }
 
@@ -54,7 +75,7 @@ public class Seeder {
 
     }
 
-    public void clearAll() {
+    public void deleteAll() {
 
     }
 
